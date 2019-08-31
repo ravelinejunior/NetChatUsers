@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include>
+        android:id="@+id/tb_conversas"
+        layout="@layout/toolbar"
+
+    </include>
+
+
+    <item android:id="@+id/item_configuracoes"
+        android:title="@string/configuracao"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+
+    />
+
+    <item
+        android:id="@+id/item_sair"
+        android:title="Sair"
+        android:orderInCategory="200"
+        app:showAsAction="never"
+
+        />
+
+    <item android:id="@+id/item_pesquisa"
+        android:title="Pesquisa"
+        android:orderInCategory="300"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_search"
+    />
+
+    <item android:id="@+id/item_adicionarUsuario"
+        android:title="Pesquisa"
+        android:orderInCategory="400"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_person_add"
+        />
+
+
+
+
+</menu>

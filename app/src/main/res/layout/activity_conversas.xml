@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".Activities.Conversas">
+
+    <include android:id="@+id/tb_conversas"
+        layout="@layout/toolbar">
+
+    </include>
+
+
+    <ListView
+        android:id="@+id/listv_conversas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linear_conversas"
+        android:layout_below="@+id/tb_conversas"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"
+        android:padding="8dp"/>
+
+
+
+    <LinearLayout
+        android:id="@+id/linear_conversas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+
+        <EditText
+            android:id="@+id/mensagem_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/corDivider"
+            android:hint="Mensagem"
+            android:textColor="@color/colorEditText"
+
+            android:textColorHint="@color/colorEditText" />
+
+        <ImageButton
+            android:id="@+id/botao_enviar_mensagem"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_send" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
