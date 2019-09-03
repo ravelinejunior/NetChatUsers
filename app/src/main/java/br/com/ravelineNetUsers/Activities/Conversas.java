@@ -160,7 +160,12 @@ public class Conversas extends AppCompatActivity {
                     Mensagens mensagem = new Mensagens();
                     mensagem.setIdUsuario(idUsuarioRemetente);
                     mensagem.setMensagemUsuario(mensagemEnviada);
+
+                    //salvando mensagens de remetente
                     salvarMensagem(idUsuarioRemetente,idUsuarioDestinatario,mensagem);
+
+                    //salvando mensagens de destinatario
+                    salvarMensagem(idUsuarioDestinatario,idUsuarioRemetente,mensagem);
 
                     //limpando o campo de texto quando o usuario clicar no botao de enviar
                     mensagem_conversas.setText("");
