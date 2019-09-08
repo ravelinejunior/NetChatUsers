@@ -55,6 +55,9 @@ public class Conversas extends AppCompatActivity {
         mensagem_conversas = findViewById(R.id.mensagem_id);
         listView = findViewById(R.id.listv_conversas);
 
+        //recuperando dados do usuario
+        PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(Conversas.this);
+        idUsuarioRemetente = preferenciaUsuario.getIdentificador();
 
         //recuperando dados de outra activity (método Bundle)
         Bundle extraBundle = getIntent().getExtras();
@@ -95,13 +98,13 @@ public class Conversas extends AppCompatActivity {
         //criando um adapter personalizado
         arrayAdapter = new MensagemAdapter(getApplicationContext(),mensagens);
 
-    /*    arrayAdapter = new ArrayAdapter<>(
-                getApplicationContext(),
-                android.R.layout.simple_list_item_1,
-                mensagens
-        );*/
-
         listView.setAdapter(arrayAdapter);
+        //recuperando as mensagens diretamente do Firebase
+        firebase = ConfiguracaoFirebase.getReferenciaFirebase().
+                child("mensagens").
+                child(idUsuarioRemetente.toString()).
+                child(idUsuarioDestinatario.toString());
+
 
 
         //criar listener para as mensagens
@@ -131,17 +134,9 @@ public class Conversas extends AppCompatActivity {
         };
 
 
-        //recuperando dados do usuario
-        PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(Conversas.this);
-        idUsuarioRemetente = preferenciaUsuario.getIdentificador();
-
-
-        //recuperando as mensagens diretamente do Firebase
-        firebase = ConfiguracaoFirebase.getReferenciaFirebase().child("mensagens").child(idUsuarioRemetente.toString()).child(idUsuarioDestinatario.toString());
-
-
         //enviando mensagem
         firebase.addValueEventListener(valueEventListenerMensagem);
+
 
         //criando evento para envio de mensagem
         btn_enviar_mensagem.setOnClickListener(new View.OnClickListener() {
@@ -189,15 +184,15 @@ public class Conversas extends AppCompatActivity {
 
     }
 
-    private boolean salvarMensagem(String id, String email, Mensagens mensagem){
+    private boolean salvarMensagem(String idEmailRemetenteParam, String idEmailDestinatarioParam, Mensagens mensagem){
         try {
 
             //salvando mensagens no nó criado
             firebase = ConfiguracaoFirebase.getReferenciaFirebase().child("mensagens");
 
             //como as mensagens precisam de um identificador unico, chamar metodo PUSH para criação de um novo nó com identificador para cada mensagem
-            firebase.child(idUsuarioRemetente).
-                    child(idUsuarioDestinatario).
+            firebase.child(idEmailRemetenteParam).
+                    child(idEmailDestinatarioParam).
                     push().
                     setValue(mensagem);
 
@@ -205,7 +200,6 @@ public class Conversas extends AppCompatActivity {
 
 
         }catch (Exception e){
-            e.getCause();
             e.printStackTrace();
             return false;
         }
