@@ -29,7 +29,6 @@
         android:id="@+id/linear_conversas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         >
@@ -37,19 +36,22 @@
         <EditText
             android:id="@+id/mensagem_id"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/corDivider"
-            android:hint="Mensagem"
+            android:background="@drawable/bg_corpo_campo_mensagem"
+            android:hint="     Mensagem"
             android:textColor="@color/colorEditText"
-
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:textColorHint="@color/colorEditText" />
 
         <ImageButton
             android:id="@+id/botao_enviar_mensagem"
             android:layout_width="44dp"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_buttom_enviar_mensagem"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:src="@drawable/ic_send" />
 
 

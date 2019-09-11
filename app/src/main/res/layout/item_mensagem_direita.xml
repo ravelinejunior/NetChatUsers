@@ -11,7 +11,8 @@
         android:text="Teste..."
         android:layout_alignParentRight="true"
         android:textColor="#fff"
-        android:background="@color/colorPrimary"
+        android:layout_margin="3dp"
+        android:background="@drawable/bg_conversa_direita"
         android:padding="8dp"/>
 
 </RelativeLayout>

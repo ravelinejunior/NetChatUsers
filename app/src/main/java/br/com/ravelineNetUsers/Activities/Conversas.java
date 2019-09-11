@@ -24,6 +24,7 @@ import br.com.ravelineNetUsers.Activities.Adapter.MensagemAdapter;
 import br.com.ravelineNetUsers.Activities.BancodeDados.ConfiguracaoFirebase;
 import br.com.ravelineNetUsers.Activities.BancodeDados.PreferenciaUsuario;
 import br.com.ravelineNetUsers.Activities.helper.Base64Decode;
+import br.com.ravelineNetUsers.Activities.model.ConversasSalvas;
 import br.com.ravelineNetUsers.Activities.model.Mensagens;
 import br.com.ravelineNetUsers.R;
 
@@ -38,7 +39,7 @@ public class Conversas extends AppCompatActivity {
     private ValueEventListener valueEventListenerMensagem;
 
     //area de dados do usuario destinatario
-     private String nomeUsuario;
+     private String nomeUsuarioDestinatario;
      private String idUsuarioDestinatario;
 
 
@@ -56,7 +57,7 @@ public class Conversas extends AppCompatActivity {
         listView = findViewById(R.id.listv_conversas);
 
         //recuperando dados do usuario
-        PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(Conversas.this);
+        final PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(Conversas.this);
         idUsuarioRemetente = preferenciaUsuario.getIdentificador();
 
         //recuperando dados de outra activity (método Bundle)
@@ -64,7 +65,7 @@ public class Conversas extends AppCompatActivity {
 
         //conferindo se objeto Bundle está vazio
         if( extraBundle != null){
-            nomeUsuario = extraBundle.getString("nome");
+            nomeUsuarioDestinatario = extraBundle.getString("nome");
 
             //recuperando email via extraBundle já convertido
             String emailDestinatario = extraBundle.getString("email");
@@ -77,7 +78,7 @@ public class Conversas extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
             toolbar.setLogo(R.drawable.ic_account_circle);
-            toolbar.setTitle(nomeUsuario);
+            toolbar.setTitle(nomeUsuarioDestinatario);
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().hide();
@@ -157,13 +158,54 @@ public class Conversas extends AppCompatActivity {
                     mensagem.setMensagemUsuario(mensagemEnviada);
 
                     //salvando mensagens de remetente
-                    salvarMensagem(idUsuarioRemetente,idUsuarioDestinatario,mensagem);
+                   Boolean retornoMensagemRemetente = salvarMensagem(idUsuarioRemetente,idUsuarioDestinatario,mensagem);
 
-                    //salvando mensagens de destinatario
-                    salvarMensagem(idUsuarioDestinatario,idUsuarioRemetente,mensagem);
+                   //condição para verificar se mensagem foi enviada com sucesso
+                    if(retornoMensagemRemetente){
+                        //salvando mensagens de destinatario
+                        Boolean retornoMensagemDestinatario = salvarMensagem(idUsuarioDestinatario,idUsuarioRemetente,mensagem);
+                        //verificando se mensagem foi recebida
+                            if(retornoMensagemDestinatario){
+
+                            }
+
+                            else{
+                                Toast.makeText(Conversas.this, "Via destinatário. Destinatário não recebeu esta mensagem!", Toast.LENGTH_LONG).show();
+                            }
+
+                    } else{
+                        Toast.makeText(Conversas.this, "Via remetente. Não foi possível enviar essa mensagem.", Toast.LENGTH_SHORT).show();
+                    }
+
+
 
                     //limpando o campo de texto quando o usuario clicar no botao de enviar
                     mensagem_conversas.setText("");
+
+                    //salvar conversas remetente
+                    //como a mensagem e o nome que serão exibidos sao dos destinatarios, quando passar id, passar do destinatario na instancia da classe ConversasSalvas
+                    ConversasSalvas conversasSalvas = new ConversasSalvas();
+                    conversasSalvas.setMensagens(mensagemEnviada);
+                    conversasSalvas.setIdUsuario(idUsuarioDestinatario);
+                    conversasSalvas.setNome(nomeUsuarioDestinatario);
+
+                    Boolean retornoConversaRemetente = salvarConversas(idUsuarioRemetente,idUsuarioDestinatario,conversasSalvas);
+                    if(retornoConversaRemetente){
+                        //salvar conversas destinatario
+                        ConversasSalvas conversasSalvasDestinatario = new ConversasSalvas();
+                        conversasSalvasDestinatario.setIdUsuario(idUsuarioRemetente);
+                        conversasSalvasDestinatario.setMensagens(mensagemEnviada);
+                        conversasSalvasDestinatario.setNome(preferenciaUsuario.getIdentificador());
+
+                        salvarConversas(idUsuarioDestinatario,idUsuarioRemetente,conversasSalvasDestinatario);
+                    }else{
+                        Toast.makeText(Conversas.this, "Não foi possivel salvar conversa.", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+
+
 
                     /* ESTRUTURA DE ENVIO DE MENSAGEM
                     MENSAGENS
@@ -203,6 +245,30 @@ public class Conversas extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+
+    }
+
+    //metodo para salvar as conversas dos usuarios
+    private boolean salvarConversas(String idEmailRemetenteConversa, String idEmailDestinatarioConversa, ConversasSalvas mensagensConversa){
+
+        try {
+
+            //criando o nó para receber o ultimo valor de conversa
+            //criar child de conversas
+            firebase = ConfiguracaoFirebase.getReferenciaFirebase().child("conversas");
+            firebase.child(idEmailRemetenteConversa).
+                    child(idEmailDestinatarioConversa).
+                    setValue(mensagensConversa);
+
+            return true;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+
+        }
+
+
 
     }
 
