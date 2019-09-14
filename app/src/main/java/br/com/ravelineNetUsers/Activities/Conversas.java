@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 
 import br.com.ravelineNetUsers.Activities.Adapter.MensagemAdapter;
 import br.com.ravelineNetUsers.Activities.BancodeDados.ConfiguracaoFirebase;
@@ -45,6 +46,7 @@ public class Conversas extends AppCompatActivity {
 
     //area de dados usuario remetente
      private String idUsuarioRemetente;
+     private String nomeUsuarioRemetente;
 
 
     @Override
@@ -59,6 +61,7 @@ public class Conversas extends AppCompatActivity {
         //recuperando dados do usuario
         final PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(Conversas.this);
         idUsuarioRemetente = preferenciaUsuario.getIdentificador();
+        nomeUsuarioRemetente = preferenciaUsuario.getNome();
 
         //recuperando dados de outra activity (método Bundle)
         Bundle extraBundle = getIntent().getExtras();
@@ -109,7 +112,7 @@ public class Conversas extends AppCompatActivity {
 
 
         //criar listener para as mensagens
-        valueEventListenerMensagem = new ValueEventListener() {
+         valueEventListenerMensagem = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -117,7 +120,7 @@ public class Conversas extends AppCompatActivity {
                 mensagens.clear();
 
                 //percorrendo dataSnapshot para verificar filhos de referencias firebase
-                for (DataSnapshot dados: dataSnapshot.getChildren()){
+                for (DataSnapshot dados : dataSnapshot.getChildren()) {
                     //criar objeto mensagem
                     Mensagens mensagem = dados.getValue(Mensagens.class);
                     mensagens.add(mensagem);
@@ -129,7 +132,7 @@ public class Conversas extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled( DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         };
@@ -194,8 +197,8 @@ public class Conversas extends AppCompatActivity {
                         //salvar conversas destinatario
                         ConversasSalvas conversasSalvasDestinatario = new ConversasSalvas();
                         conversasSalvasDestinatario.setIdUsuario(idUsuarioRemetente);
+                        conversasSalvasDestinatario.setNome(nomeUsuarioRemetente);
                         conversasSalvasDestinatario.setMensagens(mensagemEnviada);
-                        conversasSalvasDestinatario.setNome(preferenciaUsuario.getIdentificador());
 
                         salvarConversas(idUsuarioDestinatario,idUsuarioRemetente,conversasSalvasDestinatario);
                     }else{

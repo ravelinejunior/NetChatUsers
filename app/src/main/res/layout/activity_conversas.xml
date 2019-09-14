@@ -38,12 +38,15 @@
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_weight="1"
+            android:textAlignment="textStart"
+            android:paddingLeft="15dp"
             android:background="@drawable/bg_corpo_campo_mensagem"
             android:hint="     Mensagem"
             android:textColor="@color/colorEditText"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
-            android:textColorHint="@color/colorEditText" />
+            android:textColorHint="@color/colorEditText"
+            android:gravity="center" />
 
         <ImageButton
             android:id="@+id/botao_enviar_mensagem"

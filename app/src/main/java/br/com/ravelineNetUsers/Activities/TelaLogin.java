@@ -14,6 +14,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import br.com.ravelineNetUsers.Activities.BancodeDados.ConfiguracaoFirebase;
 import br.com.ravelineNetUsers.Activities.BancodeDados.PreferenciaUsuario;
@@ -26,8 +30,11 @@ public class TelaLogin extends AppCompatActivity {
     private EditText usuarioLogin;
     private EditText senhaLogin;
     private TextView textoCadastroLogin;
-    Usuarios usuarios;
-    FirebaseAuth autenticacao;
+    private Usuarios usuarios;
+    private DatabaseReference firebase;
+    private ValueEventListener valueEventListener;
+    private FirebaseAuth autenticacao;
+    private String idUsuarioLogado;
 
 
     @Override
@@ -86,10 +93,33 @@ public class TelaLogin extends AppCompatActivity {
                 if(task.isSuccessful()){
 
 
-                    //salvando dados do usuario no proprio telefone
-                    PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(getApplicationContext());
-                    String identificadorUsuarioLogado = Base64Decode.codificarTeste(usuarios.getEmail());
-                    preferenciaUsuario.salvarDados(identificadorUsuarioLogado);
+                    idUsuarioLogado = Base64Decode.codificarTeste(usuarios.getEmail());
+
+                    //recuperando uma instancia firebase para salvar nome de usuario
+                    firebase = ConfiguracaoFirebase.getReferenciaFirebase().child("usuarios").child(idUsuarioLogado);
+
+                    //recuperando valores de nome de usuario no firebase
+                    valueEventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Usuarios usuariosRecuperados = dataSnapshot.getValue(Usuarios.class);
+
+                            //salvando dados do usuario no proprio telefone
+                            PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(getApplicationContext());
+                            preferenciaUsuario.salvarDados(idUsuarioLogado,usuariosRecuperados.getNome());
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    };
+
+                    firebase.addListenerForSingleValueEvent(valueEventListener);
+
+
 
                     //abrindo tela principal
                     Toast.makeText(TelaLogin.this, "Logado com sucesso!", Toast.LENGTH_SHORT).show();

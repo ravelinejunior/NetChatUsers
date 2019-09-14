@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
 
 import br.com.ravelineNetUsers.Activities.BancodeDados.ConfiguracaoFirebase;
 import br.com.ravelineNetUsers.Activities.BancodeDados.PreferenciaUsuario;
@@ -86,7 +87,7 @@ public class CadastroEmail extends AppCompatActivity {
 
                     //salvando dados do usuario no proprio telefone
                     PreferenciaUsuario preferenciaUsuario = new PreferenciaUsuario(CadastroEmail.this);
-                    preferenciaUsuario.salvarDados(usuarioIdCodificada);
+                    preferenciaUsuario.salvarDados(usuarioIdCodificada,usuarios.getNome());
 
                     Toast.makeText(getApplicationContext(), "Usuario cadastrado", Toast.LENGTH_SHORT).show();
 
