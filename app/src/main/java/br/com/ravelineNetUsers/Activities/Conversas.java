@@ -206,10 +206,6 @@ public class Conversas extends AppCompatActivity {
                     }
 
 
-
-
-
-
                     /* ESTRUTURA DE ENVIO DE MENSAGEM
                     MENSAGENS
                     * USUARIO REMETENTE

@@ -1,11 +1,13 @@
 package br.com.ravelineNetUsers.Activities.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -23,6 +25,7 @@ import br.com.ravelineNetUsers.Activities.Adapter.ConversasAdapter;
 import br.com.ravelineNetUsers.Activities.BancodeDados.ConfiguracaoFirebase;
 import br.com.ravelineNetUsers.Activities.BancodeDados.PreferenciaUsuario;
 import br.com.ravelineNetUsers.Activities.Conversas;
+import br.com.ravelineNetUsers.Activities.helper.Base64Decode;
 import br.com.ravelineNetUsers.Activities.model.ConversasSalvas;
 import br.com.ravelineNetUsers.R;
 
@@ -79,6 +82,24 @@ public class ConversasFragment extends Fragment {
 
             }
         };
+
+        //Adicionar evento de clique na lista
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                ConversasSalvas conversasSalvas = conversasArrayList.get(i);
+                Intent intent = new Intent(getActivity(),Conversas.class);
+
+                intent.putExtra("nome",conversasSalvas.getNome());
+                String emailConvertido = Base64Decode.decodificar(conversasSalvas.getIdUsuario());
+                intent.putExtra("email",emailConvertido);
+
+                startActivity(intent);
+
+
+            }
+        });
 
 
         return view;
